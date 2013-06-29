@@ -1,0 +1,139 @@
+<!doctype html>
+ 
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Sunrise and Sunset Times</title>
+    <link rel="stylesheet" href="jquery-ui-1.9.2.custom.css" />
+    <link rel="stylesheet" href="sunrise.css" />
+    <script src="jquery-1.8.3.min.js"></script>
+    <script src="jquery-ui-1.9.2.custom.min.js"></script>
+    <script src="d3.v3.min.js"></script>
+    <script src="sunrise_draw.js"></script>
+    <script>
+    $(function() {
+        drawLongTick = function(longitude) {
+            var curLongTick = d3.select( '.curLongTick' );
+            curLongTick.attr('transform', 'translate(' + (900 * (longitude+180)/360 -5)  + ', 490)');
+            d3.select(curLongTick.childNodes).attr('stroke', '#000');
+        };
+
+        highlightLatLabel = function(latIndex) {
+            var tickText = d3.select( '.latTick.index' + latIndex);
+            tickText.attr('font-size', '18px');
+            tickText.attr('fill', '#000000');
+        };
+
+        unhighlightLatLabels = function() {
+            var tickText = d3.selectAll( '.latTick' );
+            tickText.attr('font-size', '12px');
+            tickText.attr('fill', '#CCC');
+        };
+
+        $( "#lat_slider" ).slider( {
+            orientation: "vertical",
+            slide: function( event, ui ) {
+                // Get the currently selected latitude and longitude
+                $( "#latDiv" ).text(ui.value * 5);
+                var longitude = $( '#long_slider' ).slider('value');
+
+                unhighlightLatLabels();
+                highlightLatLabel(ui.value + 13)
+                drawLongTick(longitude);
+            },
+            stop: function( event, ui ) {
+                // Get the currently selected latitude and longitude
+                $( "#latDiv" ).text(ui.value * 5);
+                var longitude = $( '#long_slider' ).slider('value');
+                var latIndex = ui.value + 13;
+
+                // Draw the graph using the selected latitude and longitude
+                drawGraph(rs, ui.value, longitude);
+
+                highlightLatLabel(latIndex);
+                drawLongTick(longitude);
+            },
+            min: -13,
+            max: 13,
+            value: 9
+        });
+        $( "#long_slider" ).slider( {
+            orientation: "horizontal",
+            slide: function( event, ui ) {
+                // Get the currently selected longitude
+                $( "#longDiv" ).text(ui.value);
+
+                drawLongTick(ui.value);
+            },
+            stop: function( event, ui ) {
+                // Get the selected latitude and longitude
+                $( "#longDiv" ).text(ui.value);
+                var latIndex = $( '#lat_slider' ).slider('value');
+
+                // Draw the graph using the selected latitude and longitude
+                drawGraph(rs, latIndex, ui.value);
+
+                highlightLatLabel(latIndex + 13);
+                drawLongTick(ui.value);
+            },
+            min: -180,
+            max: 180,
+            value: -71
+        });
+       
+        // Get the sunrise / sunset data and draw the graph for the first time
+        var rs = null;
+        $.getJSON('rise_set_data.js', function(data) {
+            // Get the selected latitude and longitude
+            var latIndex = $( '#lat_slider' ).slider('value');
+            $( "#latDiv" ).text(latIndex * 5);
+            var longitude = $( '#long_slider' ).slider('value');
+            $( "#longDiv" ).text(longitude);
+
+            rs = data;
+            drawGraph(rs, latIndex, longitude);
+
+            highlightLatLabel(latIndex + 13);
+            drawLongTick(longitude);
+        });        
+        
+    });
+    </script>
+</head>
+<body>
+
+<div id="coords">
+    <span id="latTitle">Latitude:</span>
+    <span id="latDiv"></span>
+    <span id="long_title">Longitude:</span>
+    <span id="longDiv"></span>
+    <span class="legendContainer">
+        <span class="rise legend label">Rise</span>
+        <span>
+            <div class="rise legend line"></div>
+        </span>
+        <span class="set legend label">Set</span>
+        <span>
+            <div class="set legend line"></div>
+        </span>
+        <span class="daylight legend label">Hours of Daylight</span>
+        <span>
+            <div class="daylight legend line"></div> 
+        </span>
+    </span>
+    <span class="tzCaveat">Times are in the observer's local time zone. See note * below for caveats.</span>
+
+</div>
+
+<div class="chartCont"> 
+  <div id="lat_slider"></div>
+  <div id="chart1"></div>
+  <div id="long_slider"></div>
+</div>
+
+<div class="tzNote">
+* The times given are in the observer's local time zone. However, the time zone is determined in a very approximate way from the latitude and longitude, assuming that time zones are equally spaced around the Earth, rather than using their real, more complex boundaries.
+</div>
+
+</body>
+</html>

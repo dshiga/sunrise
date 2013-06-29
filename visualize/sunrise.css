@@ -1,0 +1,93 @@
+.chartCont {
+    white-space: nowrap;
+}
+
+.legend.label {
+    margin-left: 30px;
+}
+
+.legend.line {
+    line-height: 3px;
+}
+
+.legend.line.rise {
+    background-color: #0000FF;
+}
+
+.legend.line.set {
+    background-color: #FF0000;
+}
+
+.legend.line.daylight {
+    background-color: #009900;
+}
+
+.legend.line {
+    display: inline-block;
+    height: 4px;
+    width: 30px;
+    margin-left: 5px;
+    margin-bottom: 5px;
+}
+
+#lat_slider {
+    height: 400px;
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-right: 10px;
+    float: left;
+}
+
+#long_slider {
+    width: 900px;
+    margin-top: 0px;
+    margin-left: 168px;
+    float: left;
+}
+
+#latTitle {
+    padding-top: 20px;
+    margin-left: 20px;
+}
+
+#longTitle {
+    padding-top: 20px;
+    margin-left: 20px;
+}
+
+#long_title {
+    margin-top: 0px;
+    margin-left: 35px;
+}
+
+#latDiv {
+    padding-top: 20px;
+    margin-left: 10px;
+}
+
+#longDiv {
+    margin-top: 0px;
+    margin-left: 10px;
+    width: 50px;
+}
+
+#coords {
+    padding-top: 20px;
+    white-space: nowrap;
+}
+
+#chart1 {
+    margin-top: 0px;
+    margin-left: 0px;
+}
+
+.tzCaveat {
+    font-size: 14px;
+    margin-left: 20px;
+}
+
+.tzNote {
+    margin-top: 40px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
